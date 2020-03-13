@@ -1,5 +1,6 @@
 const { Builder, By, Key, util } = require('selenium-webdriver');
 require('geckodriver');
+// require('chromedriver')
 
 const example = async () => {
 	let driver = await new Builder().forBrowser('firefox').build();
