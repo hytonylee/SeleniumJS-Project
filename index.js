@@ -1,12 +1,44 @@
-const { Builder, By, Key, until } = require('selenium-webdriver');
+'use strict';
+const webdriver = require('selenium-webdriver');
+SeleniumServer = require('selenium-webdriver/remote').SeleniumServer;
 
-(async function example() {
-	let driver = await new Builder().forBrowser('firefox').build();
+const caps = {
+	name: 'Basic Test Example',
+	build: '1.0',
+	version: '70',
+	platform: 'Windows 10',
+	screen_resolution: '1366x768',
+	record_video: 'true',
+	record_network: 'false',
+	browserName: 'Chrome',
+	username: username,
+	password: authkey
+};
+
+async function basicExample() {
 	try {
-		await driver.get('http://www.google.com/ncr');
-		await driver.findElement(By.name('q')).sendKeys('webdriver', Key.RETURN);
-		await driver.wait(until.titleIs('webdriver - Google Search'), 1000);
-	} finally {
-		await driver.quit();
+		var driver = new webdriver.Builder()
+			.usingServer(cbtHub)
+			.withCapabilities(caps)
+			.build();
+
+		await driver.get(
+			'http://crossbrowsertesting.github.io/selenium_example_page.html'
+		);
+
+		await driver.getTitle().then(function(title) {
+			console.log('The title is: ' + title);
+		});
+
+		driver.quit();
+	} catch (err) {
+		handleFailure(err, driver);
 	}
-})();
+}
+
+basicExample();
+
+function handleFailure(err, driver) {
+	console.error('Something went wrong!\n', err.stack, '\n');
+	driver.quit();
+}
