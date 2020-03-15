@@ -18,10 +18,8 @@ const example = async () => {
 		await driver.get('http://google.com');
 		await driver.findElement(By.name('q')).sendKeys(name, Key.RETURN);
 
-		let pageTwo = await driver.findElement(By.xpath("//*[@id='rso']//h3/a"));
-		pageTwo.click();
-	} catch (err) {
-		console.error(err);
+		let pageTwo = driver.wait(until.elementLocated(By.id('xjs')), 20000);
+		driver.switchTo().frame(pageTwo.click());
 	} finally {
 		// driver.quit();
 		console.log('complete!');
