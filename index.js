@@ -1,10 +1,9 @@
-const { Builder, By, Key, until } = require('selenium-webdriver');
+const { Builder, By, Key, until, Wait } = require('selenium-webdriver');
 
 require('geckodriver');
-const fs = require('fs');
 const faker = require('faker');
 
-const example = async () => {
+const searchGoogle = async () => {
 	let name = faker.name.findName();
 	let driver = await new Builder().forBrowser('firefox').build();
 
@@ -17,13 +16,20 @@ const example = async () => {
 
 		await driver.get('http://google.com');
 		await driver.findElement(By.name('q')).sendKeys(name, Key.RETURN);
-
-		let pageTwo = driver.wait(until.elementLocated(By.id('xjs')), 20000);
-		driver.switchTo().frame(pageTwo.click());
+		// await driver.wait(until.titleIs(name), 1000);
+		await driver
+			.findElement(
+				By.xpath(
+					'//html/body/div[8]/div[3]/div[8]/div[1]/div[2]/div/div[5]/div/span[1]/div/table/tbody/tr/td[12]/a/span[2]'
+				)
+			)
+			.click();
+	} catch (err) {
+		console.error(err);
 	} finally {
 		// driver.quit();
 		console.log('complete!');
 	}
 };
 
-example();
+searchGoogle();
