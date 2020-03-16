@@ -1,11 +1,4 @@
-const {
-	WebDriverWait,
-	Builder,
-	By,
-	Key,
-	until,
-	Wait
-} = require('selenium-webdriver');
+const { Builder, By, Key, until } = require('selenium-webdriver');
 
 require('geckodriver');
 const faker = require('faker');
@@ -24,15 +17,14 @@ const searchGoogle = async () => {
 		await driver.get('https://www.google.com/');
 		await driver.findElement(By.name('q')).sendKeys(name, Key.RETURN);
 
-		if (driver.titleIs(`${name}  - Google Search`)) {
-			await driver.executeScript(
-				'window.scrollTo(0, document.body.scrollHeight)'
-			);
-			await driver
-				.findElement(By.xpath("//span[contains(text(), 'Next')]"))
-				.click();
-		}
-		// await driver.wait(until.titleIs(`${name}  - Google Search`), 1000);
+		await driver.wait(() => {
+			until.titleIs(`${name}  - Google Search`);
+			driver.executeScript('window.scrollTo(0, document.body.scrollHeight)');
+		}, 1000);
+
+		await driver
+			.findElement(By.xpath("//span[contains(text(), 'Next')]"))
+			.click();
 	} catch (err) {
 		console.error(err);
 	} finally {
